@@ -1,0 +1,4 @@
+1. Apresentar a média das idades dos clientes por estado.
+select *
+from
+where
