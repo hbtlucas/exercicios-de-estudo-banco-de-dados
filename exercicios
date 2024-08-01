@@ -1,4 +1,7 @@
 1. Apresentar a média das idades dos clientes por estado.
-select *
-from
-where
+
+select es.nomeestado,round(avg((current_date - cl.nascimento)/365))
+from clientes cl, cidades ci, estados es
+where cl.idcidade = ci.idcidade
+and ci.idestado=es.idestado
+group by es.nomeestado
