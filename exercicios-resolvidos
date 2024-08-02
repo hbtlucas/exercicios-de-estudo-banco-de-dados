@@ -1,0 +1,100 @@
+1. Apresentar a média das idades dos 
+clientes por estado.
+select es.nomeestado,
+round(avg((current_date-cl.nascimento)/365),2) media 
+from clientes cl, cidades ci, estados es
+where cl.idcidade=ci.idcidade
+and ci.idestado=es.idestado
+group by es.nomeestado
+--------------------------------------------------
+2. Apresentar nome, idade e valor total 
+vendido por vendedor.
+select ve.nomevendedor,
+(current_date-ve.nascimento)/365 idade,
+sum(vd.quantidade*pr.valorproduto) total
+from vendedores ve, vendas vd, produtos pr
+where ve.idvendedor=vd.idvendedor
+and pr.idproduto=vd.idproduto
+group by ve.nomevendedor,
+(current_date-ve.nascimento)/365
+--------------------------------------------------
+3. Lista de editoras agrupadas por estado.
+4. Quantidade de empréstimos realizados por estado.
+5. Lista de vendas por estado.
+--------------------------------------------------
+6. Nome do cliente mais velho.
+select ci.nomecliente, (current_date-ci.nascimento)/365 idade
+from clientes ci
+where ((current_date-ci.nascimento)/365)=
+(select max((current_date-cl.nascimento)/365) maior
+from clientes cl)
+--------------------------------------------------
+7. Lista de nomes de autores, clientes e vendedores 
+em uma mesma sentença.
+select distinct li.autor from livros li
+union
+select cl.nomecliente from clientes cl
+union
+select ve.nomevendedor from vendedores ve
+--------------------------------------------------
+8. Total de livros emprestados por cliente.
+9. Total de livros emprestados agrupados pelo 
+ano de publicação.
+--------------------------------------------------
+10. Lista de livros não emprestados.
+select li.* from livros li
+where li.idlivro not in
+(select em.idlivro 
+from emprestimos em)
+--------------------------------------------------
+11. Total de empréstimos classificados pela profissão 
+do cliente.
+12. Descrição do produto com a maior venda (R$).
+13. Total de clientes agrupados pelo tipo de bairro que 
+residem (Vila ou Jardim).
+select substring(cl.bairro,1,position(' 'in cl.bairro)),
+count(*) total
+from clientes cl
+group by substring(cl.bairro,1,position(' 'in cl.bairro))
+--------------------------------------------------
+14. Lista de livros agrupados por editora.
+15. Lista de autores com mais de 5 publicações.
+select li.autor,count(*) total
+from livros li
+group by li.autor
+having count(*)>=5
+--------------------------------------------------
+16. Lista de clientes agrupados por ano de nascimento.
+select to_char(cl.nascimento,'YYYY') ano,count(*) total
+from clientes cl
+group by to_char(cl.nascimento,'YYYY')
+order by ano
+--------------------------------------------------
+17. Apresentar a cidade com o maior quantidade 
+de clientes.
+select ci.nomecidade,count(*) total 
+from cidades ci, clientes ct
+where ci.idcidade=ct.idcidade
+group by ci.nomecidade
+having count(*)=
+(select max(totais.total) from 
+(select cl.idcidade,count(*) total 
+from clientes cl
+group by cl.idcidade) totais)
+--------------------------------------------------
+19.Apresentar nome, idade e valor total vendido 
+para o vendedor mais novo.
+20. Editoras com maior quantidade de empréstimos.
+select ed.nomeeditora,count(*) total
+from editoras ed, livros lr, emprestimos ep
+where ed.ideditora=lr.ideditora
+and lr.idlivro=ep.idlivro
+group by ed.nomeeditora
+having count(*)=
+(select max(tabela.total) from
+(select li.ideditora, count(*) total
+from livros li, emprestimos em
+where li.idlivro=em.idlivro
+group by li.ideditora) tabela)
+--------------------------------------------------
+21. Lista de produtos com mais de 4000 unidades vendidas.
