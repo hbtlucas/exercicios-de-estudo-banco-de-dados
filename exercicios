@@ -5,3 +5,12 @@ from clientes cl, cidades ci, estados es
 where cl.idcidade = ci.idcidade
 and ci.idestado=es.idestado
 group by es.nomeestado
+
+2. Apresentar nome, idade e valor total vendido por vendedor.
+
+select ve.nomevendedor, (current_date - ve.nascimento)/365 idade, sum (vd.quantidade * pr.valorproduto) total 
+from vendedores ve, vendas vd, produtos pr
+where ve.idvendedor = vd.idvendedor and
+pr.idproduto = vd.idproduto 
+group by ve.nomevendedor, (current_date - ve.nascimento)/365
+
